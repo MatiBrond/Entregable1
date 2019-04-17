@@ -12,10 +12,7 @@ public class Agency implements Comparable<Agency>{
     private String site_id;
     private boolean terminal;
 
-
     public static Criterio criterio;
-
-
 
         public Agency(Address address, String aggency_code, String correspondent_id, String descripcion, boolean disabled, double distance, String id, String payment_method_id, String phone, String site_id, boolean terminal) {
         this.address = address;

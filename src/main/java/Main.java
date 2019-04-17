@@ -20,9 +20,6 @@ import static spark.Spark.*;
 
 public class Main {
 
-
-
-
     public static void main(String[] args) {
 
         port(8080);
@@ -66,7 +63,7 @@ public class Main {
         get("/agencies/:siteID/:payment_method_id", (request, response) -> {
             response.type("application/json");
 
-            //logger.info(request.url()+request.raw().getQueryString());
+            logger.info(request.url()+request.raw().getQueryString());
             String site_id = request.params(":siteID");
             String payment_method_id = request.params(":payment_method_id");
             String id = request.params(":id");
@@ -88,19 +85,16 @@ public class Main {
                     flag = false;
                 }
                 if (sort_by != null) {
-                    par += ( flag ? "?" : "&" ) + "sort_by=" + sort_by;
+
+                    getCriterio(sort_by);
                     flag = false;
                 }
             }
 
-            String data = readUrl("https://api.mercadolibre.com/sites/" + site_id + "/payment_methods/" + payment_method_id + "/agencies"+par);
-
+            String data = readUrl("https://api.mercadolibre.com/sites/" + site_id + "/payment_methods/" + payment_method_id + "/agencies");
             Agency[] agencies = agenciaService.getAgencies(data); //Parsea el json para quedarme solo con Results
 
-            /*Agency.criterio = Criterio.AGENCY_CODE;
-
-            Agency[] agenciesOrder = order(agencies);*/
-
+            //Agency[] agenciesOrder = order(agencies);
 
             return new Gson().toJson(
                     new StandardResponse(
@@ -108,64 +102,33 @@ public class Main {
                             new Gson().toJsonTree(agencies)));
 
         });
-
-
-
-
-
-
-
-
-
     }
 
-
-/*
-    String limit = request.queryParams(":limit");
-
-    String offset = request.queryParams(":offset");
-
-    String sort_by = request.queryParams("sort_by");
-*/
-
-
-
-/*private static String[] slipSort(String sort){
-
-    String splits[] = sort.split(",");
-
-}*/
 
     private static Agency[] order(Agency[] arr){
         Arrays.sort(arr);
         return arr;
-
     }
 
     private static void getCriterio(String criterio){
-
         switch(criterio){
-            case "Agency_code":
+            case "agency_code":
                 Agency.criterio = Criterio.AGENCY_CODE;
                 break;
-            case "Address_line":
+            case "address_line":
                 Agency.criterio = Criterio.ADDRESS_LINE;
                 break;
 
-            case "Distance":
+            case "aistance":
                 Agency.criterio = Criterio.DISTANCE;
                 break;
         }
     }
 
-
-
     private static String readUrl( String urlString) throws IOException {
 
         BufferedReader reader = null;
-
         try{
-
             URL url = new URL(urlString);
             URLConnection connection = url.openConnection();
             connection.setRequestProperty("Accept", "application/json");

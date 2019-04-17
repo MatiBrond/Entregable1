@@ -8,7 +8,6 @@ public class Address {
         private String state;
         private String zip_code;
 
-
     public String getAddres_line() {
         return addres_line;
     }
