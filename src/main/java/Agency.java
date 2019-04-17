@@ -1,7 +1,7 @@
 public class Agency implements Comparable<Agency>{
 
     private Address address;
-    private String aggency_code;
+    private String agency_code;
     private String correspondent_id;
     private String descripcion;
     private boolean disabled;
@@ -14,9 +14,29 @@ public class Agency implements Comparable<Agency>{
 
     public static Criterio criterio;
 
-        public Agency(Address address, String aggency_code, String correspondent_id, String descripcion, boolean disabled, double distance, String id, String payment_method_id, String phone, String site_id, boolean terminal) {
+    public String getAgency_code() {
+        return agency_code;
+    }
+
+    public void setAgency_code(String agency_code) {
+        this.agency_code = agency_code;
+    }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
+    }
+
+    public static Criterio getCriterio() {
+        return criterio;
+    }
+
+    public static void setCriterio(Criterio criterio) {
+        Agency.criterio = criterio;
+    }
+
+    public Agency(Address address, String agency_code, String correspondent_id, String descripcion, boolean disabled, double distance, String id, String payment_method_id, String phone, String site_id, boolean terminal) {
         this.address = address;
-        this.aggency_code = aggency_code;
+        this.agency_code = agency_code;
         this.correspondent_id = correspondent_id;
         this.descripcion = descripcion;
         this.disabled = disabled;
@@ -36,7 +56,7 @@ public class Agency implements Comparable<Agency>{
                 flag = this.address.getAddres_line().compareTo(o.address.getAddres_line());
                 break;
             case AGENCY_CODE:
-                flag = this.aggency_code.compareTo(o.aggency_code);
+                flag = Integer.valueOf(this.agency_code) - Integer.valueOf(o.agency_code);
                 break;
 
             case DISTANCE:
@@ -56,11 +76,11 @@ public class Agency implements Comparable<Agency>{
     }
 
     public String getAggency_code() {
-        return aggency_code;
+        return agency_code;
     }
 
     public void setAggency_code(String aggency_code) {
-        this.aggency_code = aggency_code;
+        this.agency_code = aggency_code;
     }
 
     public String getCorrespondent_id() {
@@ -133,5 +153,22 @@ public class Agency implements Comparable<Agency>{
 
     public void setTerminal(boolean terminal) {
         this.terminal = terminal;
+    }
+
+    @Override
+    public String toString() {
+        return "Agency{" +
+                "address=" + address +
+                ", aggency_code='" + agency_code + '\'' +
+                ", correspondent_id='" + correspondent_id + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                ", disabled=" + disabled +
+                ", distance=" + distance +
+                ", id='" + id + '\'' +
+                ", payment_method_id='" + payment_method_id + '\'' +
+                ", phone='" + phone + '\'' +
+                ", site_id='" + site_id + '\'' +
+                ", terminal=" + terminal +
+                '}';
     }
 }

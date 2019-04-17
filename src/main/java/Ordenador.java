@@ -1,32 +1,16 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
-public class Ordenador <E>{
+public class Ordenador {
 
+    private ArrayList a;
 
-    private ArrayList a ;
-
-    public Ordenador(){
+    public Ordenador() {
         super();
     }
 
-
-    public static <T extends Comparable<T>> T ordenar(T a[]){
-
-        T flag = a[0];
-
-        if (a.length > 0) {
-            for (int i = 1; i < a.length; i++) {
-
-                if(a[i] == null) continue;
-                if (flag.compareTo(a[i]) >= 0) {
-                    flag = a[i];
-                } else {
-                    flag = flag;
-                }
-            }
-        }
-        return flag;
+    public static <T extends Comparable<T>> T[] order(T a[]) {
+        Arrays.sort(a);
+        return a;
     }
-
-
 }

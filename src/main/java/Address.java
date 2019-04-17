@@ -1,6 +1,6 @@
 public class Address {
 
-        private String addres_line;
+        private String address_line;
         private String city;
         private String country;
         private String location;
@@ -9,11 +9,11 @@ public class Address {
         private String zip_code;
 
     public String getAddres_line() {
-        return addres_line;
+        return address_line;
     }
 
-    public void setAddres_line(String addres_line) {
-        this.addres_line = addres_line;
+    public void setAddress_line(String address_line) {
+        this.address_line = address_line;
     }
 
     public String getCity() {
@@ -62,5 +62,18 @@ public class Address {
 
     public void setZip_code(String zip_code) {
         this.zip_code = zip_code;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "address_line='" + address_line + '\'' +
+                ", city='" + city + '\'' +
+                ", country='" + country + '\'' +
+                ", location='" + location + '\'' +
+                ", other_info='" + other_info + '\'' +
+                ", state='" + state + '\'' +
+                ", zip_code='" + zip_code + '\'' +
+                '}';
     }
 }

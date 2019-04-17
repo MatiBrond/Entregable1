@@ -1,7 +1,6 @@
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -21,6 +20,18 @@ public class AgencyServiceImp implements AgencyService{
         return agencies;
     }
 
-
+   public void getCriterio(String criterio){
+        switch(criterio){
+            case "agency_code":
+                Agency.setCriterio(Criterio.AGENCY_CODE);
+                break;
+            case "address_line":
+                Agency.setCriterio(Criterio.ADDRESS_LINE);
+                break;
+            case "distance":
+                Agency.setCriterio(Criterio.DISTANCE);
+                break;
+        }
+    }
 }
 

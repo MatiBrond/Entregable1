@@ -1,5 +1,4 @@
 import com.google.gson.Gson;
-
 import java.util.Collection;
 import java.util.Scanner;
 import java.io.BufferedReader;
@@ -9,7 +8,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import com.google.gson.Gson;
 import java.util.Arrays;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.util.logging.FileHandler;
@@ -42,15 +40,11 @@ public class Main {
 
         get("/agencies/:siteID/:payment_method_id/:id", (request, response) -> {
             response.type("application/json");
-
-        String site_id = request.params(":siteID");
-        String payment_method_id = request.params(":payment_method_id");
-
-        String id = request.params(":id");
-        String data = readUrl("https://api.mercadolibre.com/sites/" + site_id + "/payment_methods/" + payment_method_id + "/agencies/id");
-
-        Agency[] agencies = agenciaService.getAgencies(data);
-
+            String site_id = request.params(":siteID");
+            String payment_method_id = request.params(":payment_method_id");
+            String id = request.params(":id");
+            String data = readUrl("https://api.mercadolibre.com/sites/" + site_id + "/payment_methods/" + payment_method_id + "/agencies/"+id);
+            Agency[] agencies = agenciaService.getAgencies(data);
 
         return new Gson().toJson(
                 new StandardResponse(
@@ -62,20 +56,18 @@ public class Main {
 
         get("/agencies/:siteID/:payment_method_id", (request, response) -> {
             response.type("application/json");
-
-            logger.info(request.url()+request.raw().getQueryString());
+            //logger.info(request.url()+request.raw().getQueryString());
             String site_id = request.params(":siteID");
             String payment_method_id = request.params(":payment_method_id");
             String id = request.params(":id");
             String par= "";
-            String criterio = request.params("sort_by");
-
             boolean flag = true;
 
             if(id == null){
                 String limit = request.queryParams("limit");
                 String offset = request.queryParams("offset");
                 String sort_by = request.queryParams("sort_by");
+
                 if (limit != null) {
                     par += ( flag ? "?" : "&" ) + "limit=" + limit;
                     flag = false;
@@ -85,46 +77,25 @@ public class Main {
                     flag = false;
                 }
                 if (sort_by != null) {
-
-                    getCriterio(sort_by);
+                    agenciaService.getCriterio(sort_by);
                     flag = false;
+                }else{
+                    sort_by="address_line";
+                    agenciaService.getCriterio(sort_by);
                 }
             }
 
-            String data = readUrl("https://api.mercadolibre.com/sites/" + site_id + "/payment_methods/" + payment_method_id + "/agencies");
-            Agency[] agencies = agenciaService.getAgencies(data); //Parsea el json para quedarme solo con Results
-
-            //Agency[] agenciesOrder = order(agencies);
-
+            String data = readUrl("https://api.mercadolibre.com/sites/" + site_id + "/payment_methods/" + payment_method_id + "/agencies"+par);
+            Agency[] agencies = agenciaService.getAgencies(data);
+            Agency[] agenciesOrder = Ordenador.order(agencies);
             return new Gson().toJson(
                     new StandardResponse(
                             StatusResponse.SUCCESS,
-                            new Gson().toJsonTree(agencies)));
+                            new Gson().toJsonTree(agenciesOrder)));
 
         });
     }
-
-
-    private static Agency[] order(Agency[] arr){
-        Arrays.sort(arr);
-        return arr;
-    }
-
-    private static void getCriterio(String criterio){
-        switch(criterio){
-            case "agency_code":
-                Agency.criterio = Criterio.AGENCY_CODE;
-                break;
-            case "address_line":
-                Agency.criterio = Criterio.ADDRESS_LINE;
-                break;
-
-            case "aistance":
-                Agency.criterio = Criterio.DISTANCE;
-                break;
-        }
-    }
-
+    
     private static String readUrl( String urlString) throws IOException {
 
         BufferedReader reader = null;
