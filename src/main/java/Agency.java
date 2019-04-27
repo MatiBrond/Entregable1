@@ -5,7 +5,7 @@ public class Agency implements Comparable<Agency>{
     private String correspondent_id;
     private String descripcion;
     private boolean disabled;
-    private Double distance;
+    private String distance;
     private String id;
     private String payment_method_id;
     private String phone;
@@ -22,10 +22,6 @@ public class Agency implements Comparable<Agency>{
         this.agency_code = agency_code;
     }
 
-    public void setDistance(Double distance) {
-        this.distance = distance;
-    }
-
     public static Criterio getCriterio() {
         return criterio;
     }
@@ -34,7 +30,7 @@ public class Agency implements Comparable<Agency>{
         Agency.criterio = criterio;
     }
 
-    public Agency(Address address, String agency_code, String correspondent_id, String descripcion, boolean disabled, double distance, String id, String payment_method_id, String phone, String site_id, boolean terminal) {
+    public Agency(Address address, String agency_code, String correspondent_id, String descripcion, boolean disabled, String distance, String id, String payment_method_id, String phone, String site_id, boolean terminal) {
         this.address = address;
         this.agency_code = agency_code;
         this.correspondent_id = correspondent_id;
@@ -60,7 +56,7 @@ public class Agency implements Comparable<Agency>{
                 break;
 
             case DISTANCE:
-                flag = Double.compare(this.distance, o.distance);
+                flag = Integer.valueOf(this.distance) - Integer.valueOf(o.getDistance());
                 break;
         }
         return flag;
@@ -107,11 +103,11 @@ public class Agency implements Comparable<Agency>{
         this.disabled = disabled;
     }
 
-    public double getDistance() {
+    public String getDistance() {
         return distance;
     }
 
-    public void setDistance(double distance) {
+    public void setDistance(String distance) {
         this.distance = distance;
     }
 
@@ -154,6 +150,10 @@ public class Agency implements Comparable<Agency>{
     public void setTerminal(boolean terminal) {
         this.terminal = terminal;
     }
+
+
+
+
 
     @Override
     public String toString() {

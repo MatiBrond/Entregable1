@@ -20,7 +20,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        port(8080);
+        port(8070);
 
         final AgencyService agenciaService = new AgencyServiceImp();
         Logger logger = Logger.getLogger("MyLog");
@@ -39,11 +39,12 @@ public class Main {
 
 
         get("/agencies/:siteID/:payment_method_id/:id", (request, response) -> {
+            response.header("Access-Control-Allow-Origin", "*");
             response.type("application/json");
             String site_id = request.params(":siteID");
             String payment_method_id = request.params(":payment_method_id");
             String id = request.params(":id");
-            String data = readUrl("https://api.mercadolibre.com/sites/" + site_id + "/payment_methods/" + payment_method_id + "/agencies/"+id);
+            String data = readUrl("https://api.mercadolibre.com/sites/" + site_id + "/payment_methods/" + payment_method_id);
             Agency[] agencies = agenciaService.getAgencies(data);
 
         return new Gson().toJson(
@@ -54,12 +55,16 @@ public class Main {
         });
 
 
-        get("/agencies/:siteID/:payment_method_id", (request, response) -> {
+        get("/agencies", (request, response) -> {
+            response.header("Access-Control-Allow-Origin", "*");
+            response.header("Access-Control-Allow-Methods", "*");
+            response.header("Header set Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+
             response.type("application/json");
             //logger.info(request.url()+request.raw().getQueryString());
-            String site_id = request.params(":siteID");
-            String payment_method_id = request.params(":payment_method_id");
-            String id = request.params(":id");
+            String site_id = request.queryParams("site_id");
+            String payment_method_id = request.queryParams("payment_method_id");
+            String id = request.queryParams("id");
             String par= "";
             boolean flag = true;
 
@@ -67,6 +72,7 @@ public class Main {
                 String limit = request.queryParams("limit");
                 String offset = request.queryParams("offset");
                 String sort_by = request.queryParams("sort_by");
+                String near_to = request.queryParams("near_to");
 
                 if (limit != null) {
                     par += ( flag ? "?" : "&" ) + "limit=" + limit;
@@ -79,7 +85,12 @@ public class Main {
                 if (sort_by != null) {
                     agenciaService.getCriterio(sort_by);
                     flag = false;
-                }else{
+                }
+                if(near_to != null){
+                    par+= (flag ? "?" : "&" ) + "near_to=" + near_to;
+                    flag=false;
+                }
+                else{
                     sort_by="address_line";
                     agenciaService.getCriterio(sort_by);
                 }
@@ -95,7 +106,7 @@ public class Main {
 
         });
     }
-    
+
     private static String readUrl( String urlString) throws IOException {
 
         BufferedReader reader = null;
